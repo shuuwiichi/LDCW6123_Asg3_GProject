@@ -20,3 +20,16 @@ def explain_match(movie, prefs, weights):
     if not reasons:
         reasons.append("It received the highest score among the available titles")
     return reasons
+
+def recommend_with_details(movie_list, prefs, weights, top_n=3):
+    results = []
+    for movie in movie_list:
+        score = calculate_score(movie, prefs, weights)
+        results.append({
+            "score": score,
+            "movie": movie,
+            "level": get_level(score),
+            "reasons": explain_match(movie, prefs, weights),
+        })
+    results.sort(key=lambda item: (-item["score"], item["movie"]["title"]))
+    return results[:top_n]
