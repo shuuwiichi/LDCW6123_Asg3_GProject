@@ -1,45 +1,80 @@
-#movie list
-movies = [
-    {"title": "ABC",        "genre": "scifi",     "year": 2010, "rating": 1.0, "duration": 148, "mood": "thrilling"},
-]
-
-#logic
 def match_genre(movie, pref):
-    """Compare the movie genre with the user's preferred genre"""
+    #separated by which ones are allowed to overlap
+    """compare genre with user preference"""
     if pref == "any":
-        return 0.5                      # no preference
+        return 0.5
+
     elif movie["genre"] == pref:
-        return 1.0                      # exact match
+        return 1.0
+
     elif pref == "action" and movie["genre"] == "scifi":
-        return 0.4                      # related genres get partial credit
+        return 0.4
     elif pref == "scifi" and movie["genre"] == "action":
         return 0.4
+    
+    elif pref == "fantasy" and movie["genre"] == "action":
+        return 0.4
+    elif pref == "action" and movie["genre"] == "fantasy":
+        return 0.4
+
+    elif pref == "fantasy" and movie["genre"] == "scifi":
+        return 0.3
+    elif pref == "scifi" and movie["genre"] == "fantasy":
+        return 0.3
+
     elif pref == "comedy" and movie["genre"] == "animation":
         return 0.4
     elif pref == "animation" and movie["genre"] == "comedy":
         return 0.4
+
     elif pref == "romance" and movie["genre"] == "comedy":
         return 0.3
+    elif pref == "comedy" and movie["genre"] == "romance":
+        return 0.3
+    
+    elif pref == "romance" and movie["genre"] == "drama":
+        return 0.4
+    elif pref == "drama" and movie["genre"] == "romance":
+        return 0.4
+    
+    elif pref == "thriller" and movie["genre"] == "action":
+        return 0.4
+    elif pref == "action" and movie["genre"] == "thriller":
+        return 0.4
+    
+    elif pref == "thriller" and movie["genre"] == "scifi":
+        return 0.3
+    elif pref == "scifi" and movie["genre"] == "thriller":
+        return 0.3
+    
+    elif pref == "thriller" and movie["genre"] == "drama":
+        return 0.3
+    elif pref == "drama" and movie["genre"] == "thriller":
+        return 0.3
+    
+    elif pref == "fantasy" and movie["genre"] == "romance":
+        return 0.3
+    elif pref == "romance" and movie["genre"] == "fantasy":
+        return 0.3
+
     else:
         return 0.0
 
-
 def match_mood(movie, pref):
-    """Compare the movie mood with the user's preferred mood"""
+    """compare mood with user pref"""
     if pref == "any":
         return 0.5
     elif movie["mood"] == pref:
         return 1.0
     elif pref == "funny" and movie["mood"] == "touching":
-        return 0.3                      
+        return 0.3
     elif pref == "touching" and movie["mood"] == "funny":
         return 0.3
     else:
         return 0.0
 
-
 def match_era(movie, pref):
-    """Movie 'new' or 'classic'"""
+    """compare era with user pref"""
     year = movie["year"]
     if pref == "new":
         if year >= 2015:
@@ -57,12 +92,11 @@ def match_era(movie, pref):
             return 0.5
         else:
             return 0.0
-    else:                               # "any"
+    else:
         return 0.5
 
-
 def match_duration(movie, pref):
-    """Time 'short' or 'long'"""
+    """compare duration with user pref"""
     minutes = movie["duration"]
     if pref == "short":
         if minutes < 100:
@@ -78,12 +112,11 @@ def match_duration(movie, pref):
             return 0.5
         else:
             return 0.0
-    else:                               # "any"
+    else:
         return 0.5
 
-
 def match_rating(movie, pref):
-    """Reward higher-rated movies if user cares about quality."""
+    """compare ratings with user pref"""
     rating = movie["rating"]
     if pref == "high":
         if rating >= 8.5:
@@ -94,31 +127,24 @@ def match_rating(movie, pref):
             return 0.4
         else:
             return 0.1
-    else:                               # "any"
+    else:
         return 0.5
 
-
-# WEIGHTED SCORING
-# prefs   : dict of the user's preferred value for each aspect
-# weights : dict of importance (0-5) for each aspect（keyin)
-# Returns final score 0 to 100.
 def calculate_score(movie, prefs, weights):
-    """Combine all match values using the user's weights."""
+    """calc matching score"""
     total = 0.0
-    total += match_genre(movie, prefs["genre"])       * weights["genre"]
-    total += match_mood(movie, prefs["mood"])         * weights["mood"]
-    total += match_era(movie, prefs["era"])           * weights["era"]
+    total += match_genre(movie, prefs["genre"]) * weights["genre"]
+    total += match_mood(movie, prefs["mood"]) * weights["mood"]
+    total += match_era(movie, prefs["era"]) * weights["era"]
     total += match_duration(movie, prefs["duration"]) * weights["duration"]
-    total += match_rating(movie, prefs["rating"])     * weights["rating"]
-
-    max_possible = sum(weights.values())              # best possible total
+    total += match_rating(movie, prefs["rating"]) * weights["rating"]
+    max_possible = sum(weights.values())
     if max_possible == 0:
-        return 0.0                                    # avoid division by zero
-    return total / max_possible * 100                 # normalize to 0-100
-
+        return 0.0
+    return total / max_possible * 100
 
 def get_level(score):
-    """Convert a numeric score into a recommendation label."""
+    """calc rec level"""
     if score >= 80:
         return "Highly recommended!"
     elif score >= 60:
@@ -128,26 +154,24 @@ def get_level(score):
     else:
         return "Not a great fit"
 
-
-
-#RECOMMEND: score all movies, sort, return the top n
 def recommend(movie_list, prefs, weights, top_n=3):
-    """Return the top N movies as (score, movie) pairs, best first."""
+    """show rec list"""
     results = []
     for movie in movie_list:
         score = calculate_score(movie, prefs, weights)
         results.append((score, movie))
-
-    results.sort(key=lambda pair: pair[0], reverse=True)   #lamda=get input and return #reverst=from high to low
+    results.sort(key=lambda pair: pair[0], reverse=True)
     return results[:top_n]
 
-
-#TEST
 if __name__ == "__main__":
-    test_prefs = {"genre": "scifi", "mood": "thrilling", "era": "new",
-                  "duration": "any", "rating": "high"}
-    test_weights = {"genre": 5, "mood": 3, "era": 2,
-                    "duration": 1, "rating": 4}
+    test_movie = {
+        "title": "Test Movie", "genre": "scifi", "year": 2020,
+        "rating": 8.8, "duration": 148, "mood": "thrilling"
+    }
+    prefs = {"genre": "scifi", "mood": "thrilling", "era": "new",
+             "duration": "any", "rating": "high"}
+    weights = {"genre": 5, "mood": 3, "era": 2, "duration": 1, "rating": 4}
+    score = calculate_score(test_movie, prefs, weights)
+    print(f"{test_movie['title']:<15} {score:5.1f}  {get_level(score)}")
 
-    for score, m in recommend(movies, test_prefs, test_weights, top_n=3):
-        print(f"{m['title']:<15} {score:5.1f}  {get_level(score)}")
+    #ggfuckingez heydontsaythat really fugginez loginnewskin

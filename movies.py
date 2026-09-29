@@ -8,7 +8,7 @@ movies = [
     {"title": "Toy Story", "genre": "comedy", "year": 1995, "rating": 8.3, "duration": 81, "mood": "funny"},
     {"title": "Spider-Man: Into the Spider-Verse", "genre": "action", "year": 2018, "rating": 8.4, "duration": 117, "mood": "thrilling"},
     {"title": "The Incredibles", "genre": "action", "year": 2004, "rating": 8.0, "duration": 115, "mood": "funny"},
-    {"title": "Spirited Away", "genre": "drama", "year": 2001, "rating": 8.6, "duration": 125, "mood": "touching"},
+    {"title": "Spirited Away", "genre": "fantasy", "year": 2001, "rating": 8.6, "duration": 125, "mood": "touching"},
     {"title": "Titanic", "genre": "romance", "year": 1997, "rating": 7.9, "duration": 194, "mood": "touching"},
     {"title": "Back to the Future", "genre": "scifi", "year": 1985, "rating": 8.5, "duration": 116, "mood": "funny"},
     {"title": "The Matrix", "genre": "scifi", "year": 1999, "rating": 8.7, "duration": 136, "mood": "thrilling"},
