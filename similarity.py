@@ -39,3 +39,8 @@ def jaro_winkler(a, b):
     if score > 0.7:
         score += prefix * 0.1 * (1 - score)
     return score
+
+def closest_option(user_input, options, threshold=0.78):
+    best = max(options, key=lambda option: jaro_winkler(user_input, option))
+    score = jaro_winkler(user_input, best)
+    return (best, score) if score >= threshold else (None, score)
