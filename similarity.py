@@ -28,3 +28,14 @@ def jaro_similarity(a, b):
             trans += 1
         k += 1
     return (matches/len(a) + matches/len(b) + (matches-trans/2)/matches) / 3
+
+def jaro_winkler(a, b):
+    score = jaro_similarity(a, b)
+    prefix = 0
+    for x, y in zip(a.lower(), b.lower()):
+        if x != y or prefix == 4:
+            break
+        prefix += 1
+    if score > 0.7:
+        score += prefix * 0.1 * (1 - score)
+    return score
