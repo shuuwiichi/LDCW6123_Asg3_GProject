@@ -61,3 +61,34 @@ def show_catalogue():
     print("\n********CATALOGUE********")
     for m in sorted(movies, key=lambda x: x["title"]):
         print(f"{m['title']:<35} {m['year']} | {m['rating']:.1f}/10 | {m['duration']:>3} min | {NAMES[m['genre']]} | {NAMES[m['mood']]}")
+
+def main():
+    while True:
+        print("\n********FILMMATCHER********")
+        print("1. Find movies for me")
+        print("2. View catalogue")
+        print("3. How this program works")
+        print("4. Exit")
+        choice = input("Choose 1-4: ").strip()
+
+        if choice == "1":
+            prefs, weights = collect_preferences()
+            if sum(weights.values()) == 0:
+                print("Please give at least one preference a weight above 0.")
+            else:
+                show_results(recommend_with_details(movies, prefs, weights, 3))
+        elif choice == "2":
+            show_catalogue()
+        elif choice == "3":
+            print("\nThis program compares genre, mood, era, duration and rating.")
+            print("Each criteria uses if/elif matching.")
+            print("Weights from 0-5 control how important each criteria is.")
+            print("The final score is normalized to 0-100 and the top 3 are shown.")
+        elif choice == "4":
+            print("Thank you for using Filmmatcher!")
+            break
+        else:
+            print("Invalid choice bro.")
+
+if __name__ == "__main__":
+    main()
