@@ -29,3 +29,14 @@ def get_choice(prompt, options):
             if answer in ("y", "yes"):
                 return corrected
         print("Invalid choice. Please try again.")
+
+def get_weight(label):
+    while True:
+        raw = input(f"Your preference for {label} (0-5): ").strip()
+        try:
+            value = int(raw)
+            if 0 <= value <= 5:
+                return value
+        except ValueError:
+            pass
+        print("Please enter a WHOLE number from 0 to 5.")
