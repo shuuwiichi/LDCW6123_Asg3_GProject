@@ -40,3 +40,24 @@ def get_weight(label):
         except ValueError:
             pass
         print("Please enter a WHOLE number from 0 to 5.")
+
+def collect_preferences():
+    print("\n********VIEWING PREFERENCES********")
+    prefs = {key: get_choice(f"{key.title()}: ", OPTIONS[key]) for key in OPTIONS}
+    print("\n********IMPORTANCE OF PREFERENCE********")
+    weights = {key: get_weight(key) for key in OPTIONS}
+    return prefs, weights
+
+def show_results(results):
+    print("\n********RECOMMENDATIONS********")
+    for i, result in enumerate(results, 1):
+        m = result["movie"]
+        print(f"\n{i}. {m['title']}")
+        print(f"   Score: {result['score']:.1f}/100 - {result['level']}")
+        print(f"   {NAMES[m['genre']]} | {m['year']} | {m['rating']:.1f}/10 | {m['duration']} min | {NAMES[m['mood']]}")
+        print("   Why:", "; ".join(result["reasons"]))
+
+def show_catalogue():
+    print("\n********CATALOGUE********")
+    for m in sorted(movies, key=lambda x: x["title"]):
+        print(f"{m['title']:<35} {m['year']} | {m['rating']:.1f}/10 | {m['duration']:>3} min | {NAMES[m['genre']]} | {NAMES[m['mood']]}")
