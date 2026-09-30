@@ -16,3 +16,16 @@ NAMES = {
     "touching": "Touching", "thrilling": "Thrilling", "new": "New",
     "classic": "Classic", "short": "Short", "long": "Long", "high": "High-rated",
 }
+
+def get_choice(prompt, options):
+    while True:
+        print("Options:", ", ".join(NAMES[x] for x in options))
+        value = input(prompt).strip().lower()
+        if value in options:
+            return value
+        corrected, score = closest_option(value, options)
+        if corrected:
+            answer = input(f'Sorry, did you mean "{NAMES[corrected]}"? [y/n]: ').strip().lower()
+            if answer in ("y", "yes"):
+                return corrected
+        print("Invalid choice. Please try again.")
