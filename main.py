@@ -3,7 +3,7 @@ from recommender import recommend_with_details
 from similarity import closest_option
 
 OPTIONS = {
-    "genre": ["action", "scifi", "comedy", "animation", "romance", "fantasy", "thriller","any"],
+    "genre": ["action", "scifi", "comedy", "animation", "romance", "fantasy", "thriller", "drama", "any"],
     "mood": ["funny", "touching", "thrilling", "any"],
     "era": ["new", "classic", "any"],
     "duration": ["short", "long", "any"],
@@ -12,7 +12,7 @@ OPTIONS = {
 
 NAMES = {
     "scifi": "Sci-Fi", "any": "Any", "action": "Action", "comedy": "Comedy",
-    "animation": "Animation", "romance": "Romance", "fantasy": "Fantasy", "thriller": "Thriller", "funny": "Funny",
+    "animation": "Animation", "romance": "Romance", "fantasy": "Fantasy", "thriller": "Thriller", "drama": "Drama", "funny": "Funny",
     "touching": "Touching", "thrilling": "Thrilling", "new": "New",
     "classic": "Classic", "short": "Short", "long": "Long", "high": "High-rated",
 }
