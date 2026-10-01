@@ -18,6 +18,8 @@ def get_choice(prompt, options):
     while True:
         print("Options:", ", ".join(NAMES[x] for x in options))
         value = input(prompt).strip().lower()
+        if value == "cancel":
+            return "CANCEL"
         if value in options:
             return value
         corrected, score = closest_option(value, options)
@@ -29,7 +31,9 @@ def get_choice(prompt, options):
 
 def get_weight(label):
     while True:
-        raw = input(f"Your preference for {label} (0-5): ").strip()
+        raw = input(f"Your preference for {label} (0-5): ").strip().lower()
+        if raw == "cancel":
+            return "CANCEL"
         try:
             value = int(raw)
             if 0 <= value <= 5:
@@ -39,10 +43,26 @@ def get_weight(label):
         print("Please enter a WHOLE number from 0 to 5.")
 
 def collect_preferences():
+    """Ask the user for preferences and weights.
+    Returns (None, None) if the user typed 'cancel' at any point to cancel."""
     print("\n********VIEWING PREFERENCES********")
-    prefs = {key: get_choice(f"{key.title()}: ", OPTIONS[key]) for key in OPTIONS}
+    print("(Type 'cancel' at any time to cancel and return to the main menu.)")
+
+    prefs = {}
+    for key in OPTIONS:
+        value = get_choice(f"{key.title()}: ", OPTIONS[key])
+        if value == "CANCEL":
+            return None, None               # cancel process
+        prefs[key] = value
+
     print("\n********IMPORTANCE OF PREFERENCE********")
-    weights = {key: get_weight(key) for key in OPTIONS}
+    weights = {}
+    for key in OPTIONS:
+        value = get_weight(key)
+        if value == "CANCEL":
+            return None, None               # cancel process
+        weights[key] = value
+
     return prefs, weights
 
 def show_results(results):
@@ -72,7 +92,9 @@ def main():
 
         if choice == "1":
             prefs, weights = collect_preferences()
-            if sum(weights.values()) == 0:
+            if prefs is None:
+                print("Search cancelled. Returning to main menu.")
+            elif sum(weights.values()) == 0:
                 print("Please give at least one preference a weight above 0.")
             else:
                 results = recommend_with_details(movies, prefs, weights, 3)
@@ -91,9 +113,9 @@ def main():
             confirm = input("Are you sure you want to clear all history? [y/n]: ").strip().lower()
             if confirm in ("y", "yes"):
                 clear_history()
-            elif choice == "6":
-                print("Thank you for using Filmmatcher!")
-                break
+        elif choice == "6":
+            print("Thank you for using Filmmatcher!")
+            break
         else:
             print("Invalid choice bro.")
 
