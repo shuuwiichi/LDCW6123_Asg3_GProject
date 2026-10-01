@@ -1,6 +1,8 @@
 from movies import movies
+from name import NAMES
 from recommender import recommend_with_details
 from similarity import closest_option
+from history import add_search_record, show_history, clear_history
 
 OPTIONS = {
     "genre": ["action", "scifi", "comedy", "animation", "romance", "fantasy", "thriller", "drama", "any"],
@@ -10,12 +12,7 @@ OPTIONS = {
     "rating": ["high", "any"],
 }
 
-NAMES = {
-    "scifi": "Sci-Fi", "any": "Any", "action": "Action", "comedy": "Comedy",
-    "animation": "Animation", "romance": "Romance", "fantasy": "Fantasy", "thriller": "Thriller", "drama": "Drama", "funny": "Funny",
-    "touching": "Touching", "thrilling": "Thrilling", "new": "New",
-    "classic": "Classic", "short": "Short", "long": "Long", "high": "High-rated",
-}
+
 
 def get_choice(prompt, options):
     while True:
@@ -68,15 +65,19 @@ def main():
         print("1. Find movies for me")
         print("2. View catalogue")
         print("3. How this program works")
-        print("4. Exit")
-        choice = input("Choose 1-4: ").strip()
+        print("4. View recommendation history")
+        print("5. Clear recommendation history")
+        print("6. Exit")
+        choice = input("Choose 1-6: ").strip()
 
         if choice == "1":
             prefs, weights = collect_preferences()
             if sum(weights.values()) == 0:
                 print("Please give at least one preference a weight above 0.")
             else:
-                show_results(recommend_with_details(movies, prefs, weights, 3))
+                results = recommend_with_details(movies, prefs, weights, 3)
+                show_results(results)
+                add_search_record(prefs, weights, results)
         elif choice == "2":
             show_catalogue()
         elif choice == "3":
@@ -85,8 +86,14 @@ def main():
             print("Weights from 0-5 control how important each criteria is.")
             print("The final score is normalized to 0-100 and the top 3 are shown.")
         elif choice == "4":
-            print("Thank you for using Filmmatcher!")
-            break
+            show_history()
+        elif choice == "5":
+            confirm = input("Are you sure you want to clear all history? [y/n]: ").strip().lower()
+            if confirm in ("y", "yes"):
+                clear_history()
+            elif choice == "6":
+                print("Thank you for using Filmmatcher!")
+                break
         else:
             print("Invalid choice bro.")
 
