@@ -5,7 +5,7 @@ from similarity import closest_option
 from history import add_search_record, show_history, clear_history
 
 OPTIONS = {
-    "genre": ["action", "scifi", "comedy", "animation", "romance", "fantasy", "thriller", "drama", "any"],
+    "genre": ["action", "sci-fi", "comedy", "animation", "romance", "fantasy", "thriller", "drama", "any"],
     "mood": ["funny", "touching", "thrilling", "any"],
     "era": ["new", "classic", "any"],
     "duration": ["short", "long", "any"],
